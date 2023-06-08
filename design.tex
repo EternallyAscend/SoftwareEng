@@ -77,9 +77,9 @@
 
 \usetikzlibrary{shapes.geometric, arrows}
 
-\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=0.5cm,text centered, draw=black, fill=red!30]
-\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=3cm, minimum height=0.5cm, text centered, draw=black, fill=blue!30]
-\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=0.5cm, text centered, draw=black, fill=orange!30]
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=0.8cm,text centered, draw=black, fill=red!30]
+\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=3cm, minimum height=0.8cm, text centered, draw=black, fill=blue!30]
+\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=0.8cm, text centered, draw=black, fill=orange!30]
 \tikzstyle{decision} = [diamond, minimum width=2cm, minimum height=0.5cm, text centered, draw=black, fill=green!30]
 \tikzstyle{arrow} = [thick,->,>=stealth]
 
@@ -142,7 +142,7 @@
 
     \begin{figure}[htp]
         \centering
-        \begin{tikzpicture}[node distance=2cm]
+        \begin{tikzpicture}[node distance=1.8cm]
             \node (student) [class] {学生信息};
             \node (school) [class, below of=student] {学校信息};
             \node (major) [class, below of=school] {专业信息};
@@ -181,7 +181,7 @@
 
     \begin{figure}[htp]
         \centering
-        \begin{tikzpicture}[node distance=2cm]
+        \begin{tikzpicture}[node distance=1.8cm]
           \node (start) [startstop] {开始};
           \node (input) [io, below of=start] {输入学生信息};
           \node (process1) [process, below of=input] {对数据进行分析};
@@ -220,8 +220,8 @@
 
     \begin{figure}[htp]
         \centering
-        \begin{tikzpicture}[node distance=2cm]
-          \node (start) [startstop] {Start};
+        \begin{tikzpicture}[node distance=1.8cm]
+          \node (start) [startstop] {开始};
           \node (input1) [io, below of=start] {输入学校信息};
           \node (process1) [process, below of=input1] {查找学校信息并更新};
           \node (decision1) [decision, below of=process1, yshift=-0.5cm] {专业信息更新？};
@@ -262,7 +262,7 @@
 
     \begin{figure}[htp]
         \centering
-        \begin{tikzpicture}[node distance=2cm]
+        \begin{tikzpicture}[node distance=1.8cm]
           \node (start) [startstop] {开始};
           \node (input1) [io, below of=start] {输入注册信息};
           \node (process1) [process, below of=input1] {创建用户账户};
@@ -288,8 +288,81 @@
     \end{figure}
 
     \subsubsection{统计分析}
+    \par
+    管理员执行数据统计分析的主要流程包括：
+    \begin{enumerate}
+        \item 输入登录信息；\m{管理员需要在登录页面输入用户名和密码，并提交登录请求}。
+        \item 验证用户身份；\m{系统将验证管理员输入的信息，如果验证通过，则管理员登录系统，可以访问统计后台数据。如果验证未通过，则系统将提示管理员重新输入信息}。
+        \item 访问统计后台数据；\m{管理员登录后，可以访问统计后台数据，并从数据库中检索相关的统计数据。系统将通过管理员账户和数据库来实现这个过程，以保护管理员的隐私和安全，确保管理员可以方便地查看统计数据}。
+        \item 生成并输出报告；\m{系统将检索相关的统计数据，并生成报告。报告可以显示统计数据的图表、表格和其他相关信息。生成的报告将输出给管理员。管理员可以查看报告，并根据报告中的统计数据做出正确的决策}。
+    \end{enumerate}
 
-    
+    \begin{figure}[htp]
+        \centering
+        \begin{tikzpicture}[node distance=1.8cm]
+          \node (start) [startstop] {开始};
+          \node (input1) [io, below of=start] {管理员登录};
+          \node (process1) [process, below of=input1] {认证管理员用户信息};
+          \node (process2) [process, below of=process1] {链接后端数据库};
+          \node (process3) [process, below of=process2] {筛选并聚合数据};
+          \node (process4) [process, below of=process3] {生成数据报告};
+          \node (output1) [io, below of=process4] {返回报告结果};
+          \node (stop) [startstop, below of=output1] {结束};
+          \draw [arrow] (start) -- (input1);
+          \draw [arrow] (input1) -- (process1);
+          \draw [arrow] (process1) -- (process2);
+          \draw [arrow] (process2) -- (process3);
+          \draw [arrow] (process3) -- (process4);
+          \draw [arrow] (process4) -- (output1);
+          \draw [arrow] (output1) -- (stop);
+        \end{tikzpicture}
+        \caption{\m{管理员查看统计数据}}
+        \label{fig:flowchart3}
+    \end{figure}
+    当管理员用户执行一次统计数据查看操作时，主要流程如图\ref{fig:flowchart3}所示。
+
+    \subsection{数据流程描述}
+    \subsubsection{数据}
+    \par
+    在这个软件系统中需要记录保存和管理的数据主要包括：
+    \begin{enumerate}
+        \item 学生用户信息；学生用户需要提交学生升学相关的数据，包括学生的考试成绩、兴趣爱好、工作目标等内容。除此之外，还需要在数据库中存储用户的凭证信息以供登录使用。
+        \item 管理员信息；系统数据库需要存储管理员的凭证信息以供登录使用，并且需要存储管理员的操作记录日志，可以在数据出现问题是及时查找问题并恢复。
+        \item 学校信息；系统数据库需要保存学校信息，以供升学建议的生成。
+        \item 专业信息；系统数据库需要保存专业信息，专业信息与学校信息关联，以供升学建议的生成。
+        \item 导师信息；系统数据库需要保存导师信息，导师信息与学校和专业信息关联，以供升学建议的生成。
+    \end{enumerate}
+    \subsubsection{数据间的关系}
+    \begin{figure}[h!]
+        \centering
+        \begin{tikzpicture}[node distance=2cm]
+          \node (user) [rectangle, draw=black] {用户};
+          \node (school) [rectangle, draw=black, below right=2cm and 3cm of user] {学校};
+          \node (major) [rectangle, draw=black, below right=2cm and 0.5cm of user] {专业};
+          \node (advisor) [rectangle, draw=black, below right=2cm and 0.5cm of school] {导师};
+          \node (admin) [rectangle, draw=black, below left=2cm and 0.5cm of school] {管理员};
+          \draw [->,>=stealth] (user) -- (major);
+          \draw [->,>=stealth] (user) -- (school);
+          \draw [->,>=stealth] (user) -- (advisor);
+          \draw [->,>=stealth] (school) -- (major);
+          \draw [->,>=stealth] (school) -- (advisor);
+          \draw [->,>=stealth] (major) -- (advisor);
+          \draw [->,>=stealth] (admin) -- (school);
+          \draw [->,>=stealth] (admin) -- (advisor);
+          \draw [->,>=stealth] (admin) -- (major);
+        \end{tikzpicture}
+        \caption{存储数据间存在的关系}
+        \label{fig:relationship}
+    \end{figure}
+
+    \subsection{用户特点}
+    \subsubsection{学生用户}
+    \subsubsection{系统管理员}
+    \subsection{运行环境要求}
+    \subsubsection{前端用户界面}
+    \subsubsection{后端程序}
+    \subsubsection{数据库}    
+
     \section{基本设计概述}
     \subsection{数据存储与共享}
     \par
