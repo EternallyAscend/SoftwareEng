@@ -374,13 +374,26 @@
     \subsection{运行环境要求}
     \subsubsection{前端用户界面}
     \begin{enumerate}
-        \item Web 网页前端UI
-        \item Android 移动应用
-        \item iOS 移动应用
-        \item 各种小程序应用
+        \item Web 网页前端UI，需要基于Blink内核的类Chrome浏览器、基于WebKit的Safari浏览器、基于Gecko内核的FireFox浏览器和IE浏览器。
+        \item Android 移动应用，需要不低于X版本基于 Linux 内核的 Android 操作系统，或不低于X版本的 HarmonyOS 操作系统。
+        \item iOS 移动应用，需要不低于X版本的iOS操作系统。
+        \item 各种小程序应用，与网页前端UI要求相同，需要基于Blink内核的类Chrome浏览器、基于WebKit的Safari浏览器、基于Gecko内核的FireFox浏览器和IE浏览器。
     \end{enumerate}
-    \subsubsection{后端程序}
-    \subsubsection{数据库}    
+    \subsubsection{服务器程序}
+    \begin{enumerate}
+        \item 网页服务，需要运行在基于 Linux 内核的操作系统，安装 Apache 和 Nginx 服务完成网站部署、反向代理和负载均衡。
+        \item 后端服务，需要运行在基于 Linux 内核的操作系统，安装 Java Development Kits 和 Spring Boot 框架。
+        \item 容器服务，需要运行在基于 Linux 内核的操作系统，安装 docker 支持容器运行、安装 Kubernetes 进行容器管理。
+        \item 消息队列和缓存，需要运行在基于 Linux 内核的操作系统，安装 Kafka 实现数据流分布式管理、安装 RabbitMQ 实现消息队列处理和事务处理、安装 Redis 实现高速缓存、安装 RocketMQ 实现负载均衡和故障转移。
+        \item 监控和日志系统，需要监控和日志工具来监控和记录系统的运行状态和性能，以便及时发现和解决问题，\m{常见的监控和日志工具包括Nagios、Zabbix、ELK等}。
+    \end{enumerate}
+    \subsubsection{数据库}
+    \begin{enumerate}
+        \item 数据库管理系统，需要安装数据库管理系统（DBMS）管理数据，包括 MySQL 、PostgreSQL 、Oracle 、SQL Server 等。
+        \item 数据库连接：需要使用适当的连接方式来连接数据库，常见的连接方式包括 ODB C、JDBC 、ADO.NET等。
+        \item 编程语言和框架：需要使用编程语言和框架来编写数据库相关的代码，常见的编程语言和框架包括Java和Spring Boot。
+        \item 数据备份与恢复。
+    \end{enumerate}
 
     \section{基本设计概述}
     \subsection{用户界面}
