@@ -643,9 +643,81 @@
 
     而对于管理员而言，需要管理员注册、验证码获取、管理员登录、管理员登出、数据管理和获取统计数据接口。
     \subsubsection{通信接口}
-    对于这个升学指导软件而言，需要设计数据库通信接口。
+    对于这个升学指导软件而言，需要设计数据库通信接口，以便于获取学校信息、专业信息、导师信息、用户信息和录取信息。
 
+    \section{软件架构}
+    \subsection{需求规定}
+    \subsubsection{个人信息}
+    \subsubsection{学校信息}
+    \subsubsection{专业信息}
+    \subsubsection{导师信息}
+    \subsubsection{用户信息}
+    \subsubsection{录取信息}
+
+    \subsection{运行环境}
+    \subsubsection{用户网站}
+    \subsubsection{Android设备}
+    \subsubsection{iOS设备}
+    \subsubsection{网站服务}
+    \subsubsection{后台数据库}
     
+    \subsection{软件架构}
+    \subsection{接口设计}
+    \subsection{数据库设计}
+    
+    \section{详细设计}
+    \section{代码}
+    \subsection{加密算法}
+    \subsubsection{AES}
+    \par
+    高级加密标准(Advanced Encryption Standard, AES)，对称加密算法。用于对数据的加密存储工作。
+    \begin{lstlisting}[language=Go]
+package AES
+
+import (
+	"bytes"
+	"crypto/aes"
+	"crypto/cipher"
+	"fmt"
+	uuid "github.com/satori/go.uuid"
+)
+
+func GenerateRandomKeyOfAES() []byte {
+	return []byte(uuid.Must(uuid.NewV4()).String()[:16])
+}
+
+func decryptAES(cipherText, key []byte) []byte {
+	block, _ := aes.NewCipher(key)
+	blockSize := block.BlockSize()
+	blockMode := cipher.NewCBCDecrypter(block, key[:blockSize])
+	originData := make([]byte, len(cipherText))
+	blockMode.CryptBlocks(originData, cipherText)
+	originData = PKCS7UnPadding(originData)
+	return originData
+}
+
+func PKCS7UnPadding(originData []byte) []byte {
+	length := len(originData)
+	position := int(originData[length-1])
+	return originData[:length-position]
+}
+
+func encryptAES(originData, key []byte) []byte {
+	block, _ := aes.NewCipher(key)
+	originData = PKCS7Padding(originData, block.BlockSize())
+	blockMode := cipher.NewCBCEncrypter(block, key[:block.BlockSize()])
+	cipherText := make([]byte, len(originData))
+	blockMode.CryptBlocks(cipherText, originData)
+	return cipherText
+}
+
+func PKCS7Padding(originData []byte, blockSize int) []byte {
+	padding := blockSize - len(originData)%blockSize
+	padText := bytes.Repeat([]byte{byte(padding)}, padding)
+	return append(originData, padText...)
+}
+    \end{lstlisting}
+
     \begin{center}
     \begin{tabular}{cccccc}
         \hline
@@ -686,54 +758,9 @@
         \hline
     \end{tabular}
     \end{center}
-    \subsection{用户权限}
-    
-    \begin{center}
-        \begin{tabular}{cccccc}
-            \hline
-            权限代码& 管理员权限& 组织管理& 用户管理& 记录管理\\
-            \hline
-            1011& 是& 允许& 允许& 允许\\
-            1010& 否& 禁止& 允许& 允许\\
-            1000& 否& 禁止& 禁止& 允许\\
-            1001& 否& 允许& 禁止& 允许\\
-            \hline
-        \end{tabular}
-    \end{center}
-    \subsubsection{管理员}
-    
-    \begin{center}
-    \begin{tabular}{cccccc}
-        \hline
-        权限代码& 授权读取& 授权写入& 临时读取& 临时写入\\
-        \hline
-        0111& 禁止& 允许& Ⅰ类& Ⅰ类\\
-        0110& 禁止& 禁止& Ⅰ类& Ⅱ类\\
-        0100& 禁止& 禁止& Ⅱ类& Ⅱ类\\
-        0101& 禁止& 允许& Ⅱ类& Ⅰ类\\
-        \hline
-    \end{tabular}
-    \end{center}
-    
-    \newpage
-
-    \section{附录}
-    \subsection{CDA}
-    \par
-    临床文档架构
-    (Clinical Document Architecture, CDA)，
-    文本医疗数据信息中的个人病历、医疗机构就医记录等
-    信息依据CDA的规范进行存储，并进行非对称加密。
-    \subsection{文本医疗数据}
-    \par
-    \subsection{医务人员默认权限}
-    \par
     \subsection{ECC}
     \par
-    椭圆曲线加密算法(Elliptic Curve Cryptography, ECC)，
-    非对称加密算法。用于对文本类型
-    医疗数据的加密存储工作。
-    在此处使用了以太坊的ECIES加密方法实现ECC加密。
+    椭圆曲线加密算法(Elliptic Curve Cryptography, ECC)，非对称加密算法。用于对文本类型密钥数据的加密存储工作。在此处使用了以太坊的ECIES加密方法实现ECC加密。
     \begin{lstlisting}[language=Go]
 package ECC
 
@@ -866,58 +893,38 @@ func DecryptECC(cryptData string, privateKey *ecies.PrivateKey) (srcData string,
 	return
 }
     \end{lstlisting}
-    \subsection{AES}
-    \par
-    高级加密标准(Advanced Encryption Standard, AES)，
-    对称加密算法。用于对多媒体医疗数据
-    的加密存储工作。
-    \begin{lstlisting}[language=Go]
-package AES
+    
 
-import (
-	"bytes"
-	"crypto/aes"
-	"crypto/cipher"
-	"fmt"
-	uuid "github.com/satori/go.uuid"
-)
+    
+    \newpage
 
-func GenerateRandomKeyOfAES() []byte {
-	return []byte(uuid.Must(uuid.NewV4()).String()[:16])
-}
-
-func decryptAES(cipherText, key []byte) []byte {
-	block, _ := aes.NewCipher(key)
-	blockSize := block.BlockSize()
-	blockMode := cipher.NewCBCDecrypter(block, key[:blockSize])
-	originData := make([]byte, len(cipherText))
-	blockMode.CryptBlocks(originData, cipherText)
-	originData = PKCS7UnPadding(originData)
-	return originData
-}
-
-func PKCS7UnPadding(originData []byte) []byte {
-	length := len(originData)
-	position := int(originData[length-1])
-	return originData[:length-position]
-}
-
-func encryptAES(originData, key []byte) []byte {
-	block, _ := aes.NewCipher(key)
-	originData = PKCS7Padding(originData, block.BlockSize())
-	blockMode := cipher.NewCBCEncrypter(block, key[:block.BlockSize()])
-	cipherText := make([]byte, len(originData))
-	blockMode.CryptBlocks(cipherText, originData)
-	return cipherText
-}
-
-func PKCS7Padding(originData []byte, blockSize int) []byte {
-	padding := blockSize - len(originData)%blockSize
-	padText := bytes.Repeat([]byte{byte(padding)}, padding)
-	return append(originData, padText...)
-}
-    \end{lstlisting}
-
+    \section{附录}
+    \begin{center}
+        \begin{tabular}{cccccc}
+            \hline
+            权限代码& 管理员权限& 组织管理& 用户管理& 记录管理\\
+            \hline
+            1011& 是& 允许& 允许& 允许\\
+            1010& 否& 禁止& 允许& 允许\\
+            1000& 否& 禁止& 禁止& 允许\\
+            1001& 否& 允许& 禁止& 允许\\
+            \hline
+        \end{tabular}
+    \end{center}
+    \subsubsection{管理员}
+    
+    \begin{center}
+    \begin{tabular}{cccccc}
+        \hline
+        权限代码& 授权读取& 授权写入& 临时读取& 临时写入\\
+        \hline
+        0111& 禁止& 允许& Ⅰ类& Ⅰ类\\
+        0110& 禁止& 禁止& Ⅰ类& Ⅱ类\\
+        0100& 禁止& 禁止& Ⅱ类& Ⅱ类\\
+        0101& 禁止& 允许& Ⅱ类& Ⅰ类\\
+        \hline
+    \end{tabular}
+    \end{center}
     % \subsection{架构图示}
     % \begin{figure}[H]
     %     \centering
