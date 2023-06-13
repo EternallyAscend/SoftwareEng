@@ -648,22 +648,67 @@
     \section{软件架构}
     \subsection{需求规定}
     \subsubsection{个人信息}
+    学生个人信息需要记录学生的考试成绩、兴趣爱好和职业发展目标，以便生成有效的升学指导意见。
     \subsubsection{学校信息}
+    包括高校的名称、所在地区、类型、等级、主页网址等信息，以便系统能够了解各高校的基本情况和概况。
     \subsubsection{专业信息}
+    包括高校开设的专业名称、学制、培养目标、课程设置等信息，以便系统能够了解各专业的基本情况和概况。
     \subsubsection{导师信息}
+    包括导师的姓名、职称、所属高校、所在科研机构、研究方向、科研成果等信息，以便系统能够了解各导师的基本情况和概况。
     \subsubsection{用户信息}
+    包括用户的全局唯一识别码、经过单向加密的用户密码、用户基本信息等内容。
     \subsubsection{录取信息}
+    包括各高校的招生政策和招生计划，例如录取分数线、招生人数、录取比例等信息，以便系统能够为研究生提供准确的升学建议和指导。还有各高校和导师的评价和口碑，例如学术水平、教学质量、师生关系等方面的评价，以便系统能够为研究生提供更全面和准确的升学建议和指导。
 
     \subsection{运行环境}
+    \m{
     \subsubsection{用户网站}
+    研究生升学指导软件的用户网站是用户使用软件的主要入口，用户可以在网站上注册、登录、查看升学建议等。用户网站需要运行在稳定的服务器上，具备高可用性、高并发性和安全性等特点。
     \subsubsection{Android设备}
+    研究生升学指导软件需要在Android设备上运行，以便用户能够在手机或平板电脑上方便地使用软件。因此，软件需要兼容多种操作系统和设备，具有良好的稳定性和性能表现，以确保用户体验。
     \subsubsection{iOS设备}
-    \subsubsection{网站服务}
+    研究生升学指导软件需要在iOS设备上运行，以便用户能够在iPhone或iPad上方便地使用软件。因此，软件需要兼容多种操作系统和设备，具有良好的稳定性和性能表现，以确保用户体验。
+    \subsubsection{网站后台管理}
+    研究生升学指导软件的网站后台是系统管理人员使用的管理平台，用于管理用户信息、专业信息、学校和导师信息等。网站后台需要具备高效的管理功能、用户权限管理、安全性等特点，以确保系统管理的高效性和安全性。
     \subsubsection{后台数据库}
+    研究生升学指导软件需要使用数据库服务来存储和管理用户信息、专业信息、学校和导师信息等数据。数据库服务需要具备高可靠性、高可用性、高性能和安全等特点，以确保数据的完整性和安全性。
+    }
     
     \subsection{软件架构}
+    \m{
+        研究生升学指导软件系统的架构设计采用了典型的三层架构，即表示层、业务逻辑层和数据访问层。
+        \begin{enumerate}
+            \item 表示层：表示层是用户和系统交互的界面，包括网站、安卓设备和iOS设备等。表示层主要负责接收用户请求并将请求发送到业务逻辑层进行处理，同时将业务逻辑层返回的数据进行展示和呈现。
+            \item 业务逻辑层：业务逻辑层是系统的核心层，主要负责处理业务逻辑和数据处理。业务逻辑层包括升学信息管理模块、用户管理模块、学校和专业管理模块、导师管理模块等，负责处理用户提交的请求、管理数据、进行数据分析和处理等操作。
+            \item 数据访问层：数据访问层负责与数据库进行交互，包括数据的存储、读取和更新等操作。数据访问层采用ORM框架进行数据操作，以提高数据访问效率和便捷性。
+        \end{enumerate}
+    }
+    \tikzstyle{block} = [rectangle, draw, fill=blue!20, text width=8em, text centered, rounded corners, minimum height=4em]
+    \tikzstyle{line} = [draw, -latex']
+    \begin{center}
+        \begin{tikzpicture}[node distance = 3cm, auto]
+            % Place nodes
+            \node [block] (presentation) {表示层};
+            \node [block, below of=presentation] (business) {业务逻辑层};
+            \node [block, below of=business] (data) {数据访问层};
+            % Draw edges
+            \path [line] (presentation) -- (business);
+            \path [line] (business) -- (data);
+            \path [line] (data) -- (business);
+            \path [line] (business) -- (presentation);
+        \end{tikzpicture}
+    \end{center}
     \subsection{接口设计}
+    \subsubsection{用户}
+    \subsubsection{升学建议}
+    \subsubsection{管理员}
+    \subsubsection{数据统计}
     \subsection{数据库设计}
+    \subsubsection{用户信息}
+    \subsubsection{专业信息}
+    \subsubsection{学校信息}
+    \subsubsection{导师信息}
+    
     
     \section{详细设计}
     \section{代码}
