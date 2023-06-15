@@ -802,17 +802,18 @@
     \subsubsection{导师信息}
     \begin{table}[h!]
         \centering
-        \caption{专业信息表}
+        \caption{导师信息表}
         \begin{tabular}{ccc}
         \hline
         列名 & 类型 & 描述 \\
         \hline
-        id & int & 专业ID，主键 \\
-        name & varchar\(50\) & 专业名称 \\
-        school\_id & int & 学校ID 外键 \\
+        id & int & 导师ID，主键 \\
+        name & varchar\(50\) & 导师名称 \\
+        title & varchar\(50\) & 导师职称 \\
+        major\_id & int & 专业ID，外键 \\
         \hline
         \end{tabular}
-        \label{tab:major_info}
+        \label{tab:mentor_info}
     \end{table}
     
     \section{代码}
