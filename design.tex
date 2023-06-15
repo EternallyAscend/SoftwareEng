@@ -103,7 +103,7 @@
             \hline
             完成作业共花费&72小时\\
             \hline
-            ChatGPT 完成任务比例&40\%\\
+            ChatGPT 完成任务比例&60\%\\
             \hline
             实现软件功能预计还需要&20天\\
             \hline
@@ -675,8 +675,9 @@
     }
     
     \subsection{软件架构}
+    \par
+    研究生升学指导软件系统的架构设计采用了典型的三层架构，即表示层、业务逻辑层和数据访问层，结构如图\ref{fig:structure}所示。
     \m{
-        研究生升学指导软件系统的架构设计采用了典型的三层架构，即表示层、业务逻辑层和数据访问层。
         \begin{enumerate}
             \item 表示层：表示层是用户和系统交互的界面，包括网站、安卓设备和iOS设备等。表示层主要负责接收用户请求并将请求发送到业务逻辑层进行处理，同时将业务逻辑层返回的数据进行展示和呈现。
             \item 业务逻辑层：业务逻辑层是系统的核心层，主要负责处理业务逻辑和数据处理。业务逻辑层包括升学信息管理模块、用户管理模块、学校和专业管理模块、导师管理模块等，负责处理用户提交的请求、管理数据、进行数据分析和处理等操作。
@@ -685,33 +686,498 @@
     }
     \tikzstyle{block} = [rectangle, draw, fill=blue!20, text width=8em, text centered, rounded corners, minimum height=4em]
     \tikzstyle{line} = [draw, -latex']
-    \begin{center}
-        \begin{tikzpicture}[node distance = 3cm, auto]
-            % Place nodes
-            \node [block] (presentation) {表示层};
-            \node [block, below of=presentation] (business) {业务逻辑层};
-            \node [block, below of=business] (data) {数据访问层};
-            % Draw edges
-            \path [line] (presentation) -- (business);
-            \path [line] (business) -- (data);
-            \path [line] (data) -- (business);
-            \path [line] (business) -- (presentation);
-        \end{tikzpicture}
-    \end{center}
+    \begin{figure}
+        \begin{center}
+            \begin{tikzpicture}[node distance = 3cm, auto]
+                % Place nodes
+                \node [block] (presentation) {表示层};
+                \node [block, below of=presentation] (business) {业务逻辑层};
+                \node [block, below of=business] (data) {数据访问层};
+                % Draw edges
+                \path [line] (presentation) -- (business);
+                \path [line] (business) -- (data);
+                \path [line] (data) -- (business);
+                \path [line] (business) -- (presentation);
+            \end{tikzpicture}
+            \caption{软件架构图}
+            \label{fig:structure}
+        \end{center}
+        
+    \end{figure}
     \subsection{接口设计}
+    \par
+    对于这样一个庞大的软件系统，我们可以选择使用Spring Boot框架进行后端开发和接口设计工作。
+    \par
+    \m{Spring Boot是一个快速开发工具，它可以帮助开发者快速搭建Spring框架，启动一个Web容器，继承了原有Spring框架的核心功能，同时还提供了很多方便的特性，如起步依赖、内嵌容器支持、Actuator监控等。Spring Boot可以快速构建应用程序，减少了开发人员的工作量和时间成本。此外，Spring Boot还提供了丰富的自动配置功能，可以根据不同的需求自动配置应用程序，避免了繁琐的配置工作。另外，Spring Boot还提供了很好的可扩展性和灵活性，可以根据不同的需求进行定制。}
+    
     \subsubsection{用户}
+    使用 @RestController 和 @RequestMapping 注解定义了一个用户认证控制器，包含以下功能：
+    \m{
+        \begin{enumerate}
+            \item 注册新用户：使用 @PostMapping\("/register"\) 注解定义一个 POST 方法， 使用 @RequestParam 注解指定了传入的用户名和密码参数名，如果注册成功则返回true，否则返回 false。
+            \item 用户登录：使用 @PostMapping\("/login"\) 注解定义一个 POST 方法，使用  @RequestParam 注解指定了传入的用户名和密码参数名，如果登录成功则返回 true，否则返回 false。
+            \item 用户登出：使用 @PostMapping\("/logout"\) 注解定义一个 POST 方法，使用 @RequestParam 注解指定了传入的用户名参数名，根据实际需求在客户端中删除用户的登录状态即可。
+            \item  用户注销账户：使用 @DeleteMapping\("/delete"\) 注解定义一个 DELETE方法，使用 @RequestParam 注解指定了传入的用户名和密码参数名，如果验证成功则删除该用户的账户信息，并返回 true，否则返回 false。
+        \end{enumerate}
+    }
     \subsubsection{升学建议}
+    使用 @RestController 和 @RequestMapping 注解定义了一个查询控制器，并实现了以下功能：
+    \m{
+        \begin{enumerate}
+            \item 获取学生成绩：使用 @GetMapping\("/grades"\) 注解定义了一个 GET 方法，使用 @RequestParam 注解指定了传入的学生ID参数名，根据实际需求从数据库中查询学生成绩并返回。
+            \item 获取学生兴趣：使用 @GetMapping\("/interests"\) 注解定义了一个 GET 方法，使用 @RequestParam 注解指定了传入的学生ID参数名，根据实际需求从数据库中查询学生的兴趣并返回。
+            \item 获取学生职业目标：使用 @GetMapping\("/career"\) 注解定义了一个 GET 方法，使用 @RequestParam 注解指定了传入的学生ID参数名，根据实际需求从数据库中查询学生的职业目标并返回。
+            \item  获取目标学校信息：使用 @GetMapping\("/school"\) 注解定义了一个 GET 方法，使用 @RequestParam 注解指定了传入的学校名称参数名，根据实际需求从数据库中查询目标学校信息并返回。
+        \end{enumerate}
+    }
+
     \subsubsection{管理员}
-    \subsubsection{数据统计}
+    管理员用户注册、登录和登出的接口与普通用户接口类似。而对于学校、专业和导师信息，需要补全增删改查四种数据库操作接口。管理员权限设计如表\ref{tab:admin}所示。
+    \begin{table}
+        \caption{管理员权限表}
+        \label{tab:admin}
+    \begin{center}
+    \begin{tabular}{ccc}
+        \hline
+        权限代码& 授权读取& 授权写入\\
+        \hline
+        0111& 禁止& 允许\\
+        0110& 禁止& 禁止\\
+        0100& 禁止& 禁止\\
+        0101& 禁止& 允许\\
+        \hline
+    \end{tabular}
+    \end{center}
+    \end{table}
+    
     \subsection{数据库设计}
     \subsubsection{用户信息}
-    \subsubsection{专业信息}
+    \begin{table}[h!]
+        \centering
+        \caption{用户信息表}
+        \begin{tabular}{ccc}
+        \hline
+        列名 & 类型 & 描述 \\
+        \hline
+        id & int & 用户ID，主键 \\
+        username & varchar\(50\) & 用户名 \\
+        password & varchar\(50\) & 密码 \\
+        email & varchar\(50\) & 邮箱 \\
+        role & varchar\(20\) & 用户角色 \\
+        \hline
+        \end{tabular}
+        \label{tab:user_info}
+    \end{table}
     \subsubsection{学校信息}
+    \begin{table}[h!]
+        \centering
+        \caption{学校信息表}
+        \begin{tabular}{ccc}
+        \hline
+        列名 & 类型 & 描述 \\
+        \midrule
+        id & int & 学校ID 主键 \\
+        name & varchar\(50\) & 学校名称 \\
+        address & varchar\(100\) & 学校地址 \\
+        \hline
+        \end{tabular}
+        \label{tab:school_info}
+    \end{table}
+
+    \subsubsection{专业信息}
+    \begin{table}[h!]
+        \centering
+        \caption{专业信息表}
+        \begin{tabular}{ccc}
+        \hline
+        列名 & 类型 & 描述 \\
+        \hline
+        id & int & 专业ID 主键 \\
+        name & varchar\(50\) & 专业名称 \\
+        school\_id & int & 学校ID 外键 \\
+        \hline
+        \end{tabular}
+        \label{tab:major_info}
+    \end{table}
     \subsubsection{导师信息}
+    \begin{table}[h!]
+        \centering
+        \caption{专业信息表}
+        \begin{tabular}{ccc}
+        \hline
+        列名 & 类型 & 描述 \\
+        \hline
+        id & int & 专业ID，主键 \\
+        name & varchar\(50\) & 专业名称 \\
+        school\_id & int & 学校ID 外键 \\
+        \hline
+        \end{tabular}
+        \label{tab:major_info}
+    \end{table}
     
-    
-    \section{详细设计}
     \section{代码}
+    \subsection{用户}
+    \begin{lstlisting}[language=java]
+        import org.springframework.web.bind.annotation.*;
+
+        import java.util.HashMap;
+        
+        @RestController
+        @RequestMapping("/auth")
+        public class UserAuthenticationController {
+            private HashMap<String, String> registeredUsers;
+        
+            public UserAuthenticationController() {
+                this.registeredUsers = new HashMap<String, String>();
+            }
+        
+            @PostMapping("/register")
+            public boolean registerUser(@RequestParam String username, @RequestParam String password) {
+                if (this.registeredUsers.containsKey(username)) {
+                    return false;
+                } else {
+                    this.registeredUsers.put(username, password);
+                    return true;
+                }
+            }
+        
+            @PostMapping("/login")
+            public boolean loginUser(@RequestParam String username, @RequestParam String password) {
+                if (this.registeredUsers.containsKey(username) && this.registeredUsers.get(username).equals(password)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        
+            @PostMapping("/logout")
+            public void logoutUser(@RequestParam String username) {
+                delete 
+            }
+
+            @DeleteMapping("/delete")
+            public boolean deleteUser(@RequestParam String username, @RequestParam String password) {
+                if (this.registeredUsers.containsKey(username) && this.registeredUsers.get(username).equals(password)) {
+                    this.registeredUsers.remove(username);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+    \end{lstlisting}
+    \subsection{升学建议}
+    \begin{lstlisting}[language=java]
+        import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+@RestController
+@RequestMapping("/search")
+public class SchoolSearchController {
+    private HashMap<String, School> schools;
+
+    public SchoolSearchController() {
+        this.schools = new HashMap<String, School>();
+        School school = new School("NKU", "TJU");
+        school.addMajor(new Major("Computer Science"));
+        school.addMajor(new Major("Artificial Intelligence"));
+        school.addMajor(new Major("Software Engineering"));
+        school.addMentor(new Mentor("John Smith", "Computer Science", "Professor"));
+        school.addMentor(new Mentor("Jane Doe", "Computer Science", "Associate Professor"));
+        this.schools.put(school.getName(), school);
+    }
+
+    @GetMapping("/grades")
+    public ArrayList<String> getGrades(@RequestParam String studentId) {
+        ArrayList<String> grades = new ArrayList<String>();
+        return grades;
+    }
+
+    @GetMapping("/interests")
+    public ArrayList<String> getInterests(@RequestParam String studentId) {
+        ArrayList<String> interests = new ArrayList<String>();
+        interests.add("Reading");
+        interests.add("Coding");
+        interests.add("Sports");
+        return interests;
+    }
+
+    @GetMapping("/career")
+    public ArrayList<String> getCareer(@RequestParam String studentId) {
+        ArrayList<String> career = new ArrayList<String>();
+        career.add("Engineer");
+        career.add("Doctor");
+        career.add("Lawyer");
+        return career;
+    }
+
+    @GetMapping("/school")
+    public School getSchoolInfo(@RequestParam String schoolName) {
+        if (this.schools.containsKey(schoolName)) {
+            return this.schools.get(schoolName);
+        } else {
+            return null;
+        }
+    }
+}
+
+class School {
+    private String name;
+    private String location;
+    private ArrayList<Major> majors;
+    private ArrayList<Mentor> mentors;
+
+    public School(String name, String location) {
+        this.name = name;
+        this.location = location;
+        this.majors = new ArrayList<Major>();
+        this.mentors = new ArrayList<Mentor>();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void addMajor(Major major) {
+        this.majors.add(major);
+    }
+
+    public ArrayList<Major> getMajors() {
+        return majors;
+    }
+
+    public void addMentor(Mentor mentor) {
+        this.mentors.add(mentor);
+    }
+
+    public ArrayList<Mentor> getMentors() {
+        return mentors;
+    }
+}
+
+class Major {
+    private String name;
+
+    public Major(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+
+class Mentor {
+    private String name;
+    private String field;
+    private String title;
+
+    public Mentor(String name, String field, String title) {
+        this.name = name;
+        this.field = field;
+        this.title = title;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getField() {
+        return field;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+}
+    \end{lstlisting}
+    \subsection{管理员}
+    \begin{lstlisting}[language=java]
+        import org.springframework.web.bind.annotation.*;
+
+        import java.util.ArrayList;
+        import java.util.HashMap;
+        
+        @RestController
+        @RequestMapping("/admin")
+        public class SchoolAdminController {
+            private HashMap<String, School> schools;
+        
+            public SchoolAdminController() {
+                this.schools = new HashMap<String, School>();
+                School school = new School("Harvard", "Cambridge, MA");
+                school.addMajor(new Major("Computer Science"));
+                school.addMajor(new Major("Biology"));
+                school.addMajor(new Major("History"));
+                school.addMentor(new Mentor("John Smith", "Computer Science", "Professor"));
+                school.addMentor(new Mentor("Jane Doe", "Computer Science", "Associate Professor"));
+                this.schools.put(school.getName(), school);
+            }
+        
+            @PostMapping("/addSchool")
+            public boolean addSchool(@RequestBody School school) {
+                if (this.schools.containsKey(school.getName())) {
+                    return false;
+                } else {
+                    this.schools.put(school.getName(), school);
+                    return true;
+                }
+            }
+        
+            @PutMapping("/updateSchool")
+            public boolean updateSchool(@RequestParam String schoolName, @RequestBody School school) {
+                if (this.schools.containsKey(schoolName)) {
+                    this.schools.put(schoolName, school);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        
+            @DeleteMapping("/deleteSchool")
+            public boolean deleteSchool(@RequestParam String schoolName) {
+                if (this.schools.containsKey(schoolName)) {
+                    this.schools.remove(schoolName);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        
+            @PostMapping("/addMajor")
+            public boolean addMajor(@RequestParam String schoolName, @RequestBody Major major) {
+                if (this.schools.containsKey(schoolName)) {
+                    this.schools.get(schoolName).addMajor(major);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        
+            @PutMapping("/updateMajor")
+            public boolean updateMajor(@RequestParam String schoolName, @RequestParam String majorName, @RequestBody Major major) {
+                if (this.schools.containsKey(schoolName)) {
+                    ArrayList<Major> majors = this.schools.get(schoolName).getMajors();
+                    for (int i = 0; i < majors.size(); i++) {
+                        if (majors.get(i).getName().equals(majorName)) {
+                            majors.set(i, major);
+                            return true;
+                        }
+                    }
+                    return false;
+                } else {
+                    return false;
+                }
+            }
+        
+            @DeleteMapping("/deleteMajor")
+            public boolean deleteMajor(@RequestParam String schoolName, @RequestParam String majorName) {
+                if (this.schools.containsKey(schoolName)) {
+                    ArrayList<Major> majors = this.schools.get(schoolName).getMajors();
+                    for (int i = 0; i < majors.size(); i++) {
+                        if (majors.get(i).getName().equals(majorName)) {
+                            majors.remove(i);
+                            return true;
+                        }
+                    }
+                    return false;
+                } else {
+                    return false;
+                }
+            }
+        
+            @PostMapping("/addMentor")
+            public boolean addMentor(@RequestParam String schoolName, @RequestBody Mentor mentor) {
+                if (this.schools.containsKey(schoolName)) {
+                   this.schools.get(schoolName).addMentor(mentor);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        
+            @PutMapping("/updateMentor")
+            public boolean updateMentor(@RequestParam String schoolName, @RequestParam String mentorName, @RequestBody Mentor mentor) {
+                if (this.schools.containsKey(schoolName)) {
+                    ArrayList<Mentor> mentors = this.schools.get(schoolName).getMentors();
+                    for (int i = 0; i < mentors.size(); i++) {
+                        if (mentors.get(i).getName().equals(mentorName)) {
+                            mentors.set(i, mentor);
+                            return true;
+                        }
+                    }
+                    return false;
+                } else {
+                    return false;
+                }
+            }
+        
+            @DeleteMapping("/deleteMentor")
+            public boolean deleteMentor(@RequestParam String schoolName, @RequestParam String mentorName) {
+                if (this.schools.containsKey(schoolName)) {
+                    ArrayList<Mentor> mentors = this.schools.get(schoolName).getMentors();
+                    for (int i = 0; i < mentors.size(); i++) {
+                        if (mentors.get(i).getName().equals(mentorName)) {
+                            mentors.remove(i);
+                            return true;
+                        }
+                    }
+                    return false;
+                } else {
+                    return false;
+                }
+            }
+    
+            @GetMapping("/getSchools")
+            public ArrayList<School> getSchools() {
+                return new ArrayList<School>(this.schools.values());
+            }
+        
+            @GetMapping("/getSchool")
+            public School getSchool(@RequestParam String schoolName) {
+                return this.schools.get(schoolName);
+            }
+        
+            @GetMapping("/getMajors")
+            public ArrayList<Major> getMajors(@RequestParam String schoolName) {
+                return this.schools.get(schoolName).getMajors();
+            }
+        
+            @GetMapping("/getMajor")
+            public Major getMajor(@RequestParam String schoolName, @RequestParam String majorName) {
+                ArrayList<Major> majors = this.schools.get(schoolName).getMajors();
+                for (int i = 0; i < majors.size(); i++) {
+                    if (majors.get(i).getName().equals(majorName)) {
+                        return majors.get(i);
+                    }
+                }
+                return null;
+            }
+        
+            @GetMapping("/getMentors")
+            public ArrayList<Mentor> getMentors(@RequestParam String schoolName) {
+                return this.schools.get(schoolName).getMentors();
+            }
+        
+            @GetMapping("/getMentor")
+            public Mentor getMentor(@RequestParam String schoolName, @RequestParam String mentorName) {
+                ArrayList<Mentor> mentors = this.schools.get(schoolName).getMentors();
+                for (int i = 0; i < mentors.size(); i++) {
+                    if (mentors.get(i).getName().equals(mentorName)) {
+                        return mentors.get(i);
+                    }
+                }
+                return null;
+            }
+        }       
+    \end{lstlisting}
+    
     \subsection{加密算法}
     \subsubsection{AES}
     \par
@@ -763,47 +1229,7 @@ func PKCS7Padding(originData []byte, blockSize int) []byte {
 }
     \end{lstlisting}
 
-    \begin{center}
-    \begin{tabular}{cccccc}
-        \hline
-        组织类别& 类别代码& 认证信息& 状态标识& 属性信息& 其他信息\\
-        \hline
-        医院& 11& 医院识别码& 有效/无效& 详情& 医院评分\\
-        管理机构& 10& 分支机构识别码& 有效/无效& 详情& 管理员识别码\\
-        科研机构& 00& 机构识别码& 有效/无效& 详情& 机构评分\\
-        健康设备供应商& 01& 企业识别码& 有效/无效& 详情& 企业评分\\
-        \hline
-    \end{tabular}
-    \end{center}
-    
-    \begin{center}
-    \begin{tabular}{cccccc}
-        \hline
-        用户类别& 权限代码& 认证信息& 状态标识& 属性信息& 识别码\\
-        \hline
-        医务人员& 11xx& 身份证& 有效/无效& 执业医师资格证& 程序生成\\
-        普通用户& 0010& 身份证& 有效/无效& 公钥私钥密钥等& 程序生成\\
-        管理人员& 10xx& 身份证& 有效/无效& 所在分支识别码& 程序生成\\
-        科研人员& 0000& 身份证& 有效/无效& 所在机构识别码& 程序生成\\
-        医院设备& 01xx& 设备ID& 有效/无效& 所在医院识别码& 程序生成\\
-        健康监测设备& 0100& 设备ID& 有效/无效& 所属用户识别码& 程序生成\\
-        \hline
-    \end{tabular}
-    \end{center}
-    
-    \begin{center}
-    \begin{tabular}{cccccc}
-        \hline
-        权限代码& 授权读取& 授权写入& 临时读取& 临时写入\\
-        \hline
-        1111& 允许& 允许& Ⅰ类& Ⅰ类\\
-        1110& 允许& 禁止& Ⅰ类& Ⅱ类\\
-        1100& 禁止& 禁止& Ⅱ类& Ⅱ类\\
-        1101& 禁止& 允许& Ⅱ类& Ⅰ类\\
-        \hline
-    \end{tabular}
-    \end{center}
-    \subsection{ECC}
+    \subsubsection{ECC}
     \par
     椭圆曲线加密算法(Elliptic Curve Cryptography, ECC)，非对称加密算法。用于对文本类型密钥数据的加密存储工作。在此处使用了以太坊的ECIES加密方法实现ECC加密。
     \begin{lstlisting}[language=Go]
@@ -938,44 +1364,310 @@ func DecryptECC(cryptData string, privateKey *ecies.PrivateKey) (srcData string,
 	return
 }
     \end{lstlisting}
-    
+    \subsection{http通信中间件}
+    \begin{lstlisting}[language=go]
+        package pkg
 
-    
-    \newpage
+        import (
+            "encoding/json"
+            "errors"
+            "fmt"
+            "net"
+            "net/http"
+            "net/url"
+            "strconv"
+            "strings"
+        )
+        
+        const (
+            HttpResponseTrue  = 0
+            HttpResponseFalse = 1
+        )
+        
+        const OKString = "OK."
+        
+        func GetRealIpAddress(r *http.Request) (string, error) {
+            xForwardedFor := r.Header.Get("X-Forwarded-For")
+            ip := strings.TrimSpace(strings.Split(xForwardedFor, ",")[0])
+            if "" != ip {
+                return ip, nil
+            }
+        
+            ip = strings.TrimSpace(r.Header.Get("X-Real-Ip"))
+            if "" != ip {
+                return ip, nil
+            }
+        
+            ip, _, err := net.SplitHostPort(strings.TrimSpace(r.RemoteAddr))
+            return ip, err
+            // return "", errors.New("Failed to get ip address. ")
+        }
+        
+        type JsonResponse struct {
+            Status  int             `json:"status"`
+            Message json.RawMessage `json:"message"`
+            Code    int             `json:"code"`
+        }
+        
+        func SendJsonResponse(w http.ResponseWriter, r *http.Request, response JsonResponse) {
+            result, err := json.Marshal(response)
+            if nil != err {
+                fmt.Println(err.Error())
+            }
+            w.Header().Set("content-type", "application/json")
+            w.WriteHeader(response.Code)
+            _, err = w.Write(result)
+            if nil != err {
+                fmt.Println(err.Error())
+            }
+        }
+        
+        func DealJsonMarshal(w http.ResponseWriter, r *http.Request, v interface{}) []byte {
+            data, err := json.Marshal(v)
+            if nil != err {
+                SendStringResponse(w, r, StringResponse{
+                    Status:  HttpResponseFalse,
+                    Message: "Server Error. Json: " + err.Error(),
+                    Code:    http.StatusInternalServerError,
+                })
+                return nil
+            }
+            return data
+        }
+        
+        func WriteJsonMarshal(w http.ResponseWriter, r *http.Request, v interface{}) {
+            message := DealJsonMarshal(w, r, v)
+            if nil != message {
+                SendJsonResponse(w, r, JsonResponse{
+                    Status:  HttpResponseTrue,
+                    Message: message,
+                    Code:    http.StatusOK,
+                })
+            }
+        }
+        
+        type StringResponse struct {
+            Status  int    `json:"status"`
+            Message string `json:"message"`
+            Code    int    `json:"code"`
+        }
+        
+        func makeResponseOK() StringResponse {
+            return StringResponse{
+                Status:  HttpResponseTrue,
+                Message: OKString,
+                Code:    http.StatusOK,
+            }
+        }
+        
+        func (res StringResponse) Send(w http.ResponseWriter, r *http.Request) {
+            result, err := json.Marshal(res)
+            if nil != err {
+                fmt.Println(err)
+                return
+            }
+            SetContentJsonHeader(w)
+            w.WriteHeader(res.Code)
+            _, err = w.Write(result)
+            if nil != err {
+                fmt.Println(err)
+            }
+        }
+        
+        func SendStringResponse(w http.ResponseWriter, r *http.Request, response StringResponse) {
+            result, err := json.Marshal(response)
+            if nil != err {
+                fmt.Println(err.Error())
+            }
+            w.Header().Set("content-type", "application/json")
+            w.WriteHeader(response.Code)
+            _, err = w.Write(result)
+            if nil != err {
+                fmt.Println(err.Error())
+            }
+        }
+        
+        func SendResponseOK(w http.ResponseWriter, r *http.Request) {
+            makeResponseOK().Send(w, r)
+        }
+        
+        func SendResponseInternalError(w http.ResponseWriter, r *http.Request, err error, code int) {
+            StringResponse{
+                Status:  code,
+                Message: err.Error(),
+                Code:    http.StatusInternalServerError,
+            }.Send(w, r)
+        }
+        
+        type Method struct {
+            Pattern string                                                  `json:"pattern"`
+            Handler func(writer http.ResponseWriter, request *http.Request) `json:"handler"`
+        }
+        
+        func MethodGenerator(pattern string, handler func(writer http.ResponseWriter, request *http.Request)) Method {
+            return Method{
+                Pattern: pattern,
+                Handler: handler,
+            }
+        }
+        
+        type Router struct {
+            Name    string   `json:"name"`
+            Mask    string   `json:"mask"`
+            Methods []Method `json:"methods"`
+        }
+        
+        func (router Router) attachServer(sm *http.ServeMux, mask string) {
+            for i := range router.Methods {
+                // log.Println(mask + router.Mask + router.Methods[i].Pattern) // TODO Remove router output.
+                sm.HandleFunc(mask+router.Mask+router.Methods[i].Pattern, router.Methods[i].Handler)
+            }
+        }
+        
+        func SetDefaultHeaders(w http.ResponseWriter) {
+        
+        }
+        
+        func SetContentJsonHeader(w http.ResponseWriter) {
+            w.Header().Set("content-type", "application/json")
+        }
+        
+        type Server struct {
+            Path    string   `json:"path"`
+            Port    int      `json:"port"`
+            Mask    string   `json:"mask"`
+            Routers []Router `json:"routers"`
+        }
+        
+        func (server Server) Listen() {
+            sm := http.NewServeMux()
+            for i := range server.Routers {
+                server.Routers[i].attachServer(sm, server.Mask)
+            }
+            err := MuxListen(server.Path, server.Port, sm)
+            if nil != err {
+                fmt.Println(err.Error())
+            }
+        }
+        
+        func MuxListen(path string, port int, mux *http.ServeMux) error {
+            return http.ListenAndServe(path+":"+strconv.Itoa(port), mux)
+        }
+        
+        func CheckNeedArgs(values url.Values, args ...string) error {
+            message := ""
+            for _, value := range args {
+                if !values.Has(value) {
+                    message += value + ", "
+                }
+            }
+            if "" != message {
+                return errors.New(message + "arg(s) is(are) not defined.")
+            }
+            return nil
+        }
+        
+        type GetRequest struct {
+            Query url.Values `json:"query"`
+            Err   error      `json:"err"`
+        }
+        
+        func DealGetRequest(w http.ResponseWriter, r *http.Request, args ...string) GetRequest {
+            SetDefaultHeaders(w)
+            request := GetRequest{
+                Query: r.URL.Query(),
+                Err:   nil,
+            }
+            if "GET" != r.Method {
+                if "OPTIONS" != r.Method {
+                    request.Err = errors.New("Request Must be 'Get'. ")
+                    StringResponse{
+                        Status:  HttpResponseFalse,
+                        Message: "Server Error. " + request.Err.Error(),
+                        Code:    http.StatusMethodNotAllowed,
+                    }.Send(w, r)
+                } else {
+                    request.Err = errors.New("OPTIONS")
+                    SendResponseOK(w, r)
+                }
+                return request
+            }
+            request.Err = CheckNeedArgs(request.Query, args...)
+            if nil != request.Err {
+                StringResponse{
+                    Status:  HttpResponseFalse,
+                    Message: "Server Error. " + request.Err.Error(),
+                    Code:    http.StatusExpectationFailed,
+                }.Send(w, r)
+            }
+            return request
+        }
+        
+        type PostRequest struct {
+            Err error `json:"err"`
+        }
+        
+        func DealPostRequest(w http.ResponseWriter, r *http.Request, args ...string) PostRequest {
+            SetDefaultHeaders(w)
+            request := PostRequest{
+                Err: r.ParseForm(),
+            }
+            if "POST" != r.Method {
+                if "OPTIONS" != r.Method {
+                    request.Err = errors.New("Request Must be 'Post'. ")
+                    StringResponse{
+                        Status:  HttpResponseFalse,
+                        Message: "Server Error. " + request.Err.Error(),
+                        Code:    http.StatusMethodNotAllowed,
+                    }.Send(w, r)
+                } else {
+                    request.Err = errors.New("OPTIONS")
+                    SendResponseOK(w, r)
+                }
+                return request
+            }
+            request.Err = CheckNeedArgs(r.Form, args...)
+            if nil != request.Err {
+                StringResponse{
+                    Status:  HttpResponseFalse,
+                    Message: "Server Error. " + request.Err.Error(),
+                    Code:    http.StatusExpectationFailed,
+                }.Send(w, r)
+            }
+            return request
+        }
+        
+        func DealPostError() {}
+        
+        type Dealer struct {
+            Header   func(w http.ResponseWriter) `json:"header"`
+            Handlers []Handler                   `json:"handlers"`
+        }
+        
+        type Handler interface {
+            Dealer(w http.ResponseWriter, r *http.Request) (http.ResponseWriter, *http.Request, error)
+        }
+        
+        func (dealer Dealer) Deal(w http.ResponseWriter, r *http.Request) (http.ResponseWriter, *http.Request, error) {
+            if nil != dealer.Header {
+                dealer.Header(w)
+            }
+            wc, rc := w, r
+            var err error
+            for i := range dealer.Handlers {
+                if nil == dealer.Handlers[i].Dealer {
+                    continue
+                }
+                wc, rc, err = dealer.Handlers[i].Dealer(wc, rc)
+                if err != nil {
+                    return w, r, err
+                }
+            }
+            return wc, rc, nil
+        }
+               
+    \end{lstlisting}
 
-    \section{附录}
-    \begin{center}
-        \begin{tabular}{cccccc}
-            \hline
-            权限代码& 管理员权限& 组织管理& 用户管理& 记录管理\\
-            \hline
-            1011& 是& 允许& 允许& 允许\\
-            1010& 否& 禁止& 允许& 允许\\
-            1000& 否& 禁止& 禁止& 允许\\
-            1001& 否& 允许& 禁止& 允许\\
-            \hline
-        \end{tabular}
-    \end{center}
-    \subsubsection{管理员}
-    
-    \begin{center}
-    \begin{tabular}{cccccc}
-        \hline
-        权限代码& 授权读取& 授权写入& 临时读取& 临时写入\\
-        \hline
-        0111& 禁止& 允许& Ⅰ类& Ⅰ类\\
-        0110& 禁止& 禁止& Ⅰ类& Ⅱ类\\
-        0100& 禁止& 禁止& Ⅱ类& Ⅱ类\\
-        0101& 禁止& 允许& Ⅱ类& Ⅰ类\\
-        \hline
-    \end{tabular}
-    \end{center}
-    % \subsection{架构图示}
-    % \begin{figure}[H]
-    %     \centering
-    %     \includegraphics[width=14cm]{figures/arch.png}
-    %     \caption{Architecture}
-    % \end{figure} 
 
 \end{document}
 % \end{CJK}
